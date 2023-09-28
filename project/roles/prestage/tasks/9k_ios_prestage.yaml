@@ -16,23 +16,17 @@
   register: dir_output
 
 - block:
-    - name: Defining a variable to exit conditions
-      set_fact: device_primary_flash_done="false"
-
     - name: Determine if primary device name is bootflash
       set_fact: device_primary_flash="bootflash"
-        device_primary_flash_done="true"
-      when: dir_output['stdout'][0][:40].find('bootflash:') != -1 and device_primary_flash_done=="false"
+      when: dir_output['stdout'][0][:40].find(' bootflash:') != -1
 
     - name: Determine if primary device name is flash
       set_fact: device_primary_flash="flash"
-        device_primary_flash_done="true"
-      when: dir_output['stdout'][0][:40].find('flash:') != -1 and device_primary_flash_done=="false"
+      when: dir_output['stdout'][0][:40].find(' flash:') != -1
 
     - name: Determine if primary device name is flash-1
       set_fact: device_primary_flash="flash-1"
-        device_primary_flash_done="true"
-      when: dir_output['stdout'][0][:40].find('flash-1:') != -1 and device_primary_flash_done=="false"
+      when: dir_output['stdout'][0][:40].find(' flash-1:') != -1
 
   rescue:
     - name: Determine whether stby-bootflash exists
