@@ -65,19 +65,22 @@
       when: device_secondary_flash is defined
       register: seconday_flash_space_output
 
-    - name: debug secondary flash ouput
-      debug: msg="{{ seconday_flash_space_output }}"
-      poll: 0
-      when: seconday_flash_space_output is defined
-
-    - name: Assert that IOS device can be upgraded - secondary flash
+    - name: Intermediate processing...
       set_fact: free_string={{ seconday_flash_space_output['stdout'][0][seconday_flash_space_output['stdout'][0].find('(')+1:] }}
 
-    - name: Assert that IOS device can be upgraded - secondary flash
+    - name: Intermediate processing...
       set_fact: secondary_flash_memfree={{ free_string[:free_string.find(' ')] }}
 
-    - name: Assert that IOS device can be upgraded - secondary flash
+    - name: Intermediate processing...
       set_fact: secondary_flash_memfree_mb={{ secondary_flash_memfree | int / 1000000 }}
+
+    - name: Assert that IOS device can be upgraded by checking the free space in secondary flash
+      assert:
+        that:
+          - '"ios" == "{{ ansible_net_system }}"'
+          - 1000 < {{ secondary_flash_memfree_mb }}
+        success_msg: Device is in healthy state.
+        fail_msg: Device should be manually verified.
 
     # - assert:
     #     that:
