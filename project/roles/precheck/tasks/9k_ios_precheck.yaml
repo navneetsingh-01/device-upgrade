@@ -82,39 +82,39 @@
         success_msg: Device is in healthy state.
         fail_msg: Device should be manually verified.
 
-    # - assert:
-    #     that:
-    #       - 85 > "{{ item.split()[-1] | replace('%', '') }}" | int
-    #     success_msg: Device is in healthy state.
-    #     fail_msg: Device should be manually verified.
-    #   loop: "{{ output['stdout'][0].split('\n') }}"
-    #   when: "'five minutes:' in item"
+    - assert:
+        that:
+          - 85 > "{{ item.split()[-1] | replace('%', '') }}" | int
+        success_msg: Device is in healthy state.
+        fail_msg: Device should be manually verified.
+      loop: "{{ output['stdout'][0].split('\n') }}"
+      when: "'five minutes:' in item"
 
-    # - name: Creates directory
-    #   file:
-    #     path: 'prechecks/{{ inventory_hostname }}'
-    #     state: directory
-    #   when: output is defined
-    #   run_once: true
+    - name: Creates directory
+      file:
+        path: "prechecks/{{ inventory_hostname }}"
+        state: directory
+      when: output is defined
+      run_once: true
 
-    # - name: Remove existing file if it exists
-    #   file:
-    #     path: 'precheck_{{ inventory_hostname }}.txt'
-    #     state: absent
-    #   when: output is defined
+    - name: Remove existing file if it exists
+      file:
+        path: "precheck_{{ inventory_hostname }}.txt"
+        state: absent
+      when: output is defined
 
-    # - name: Creates file
-    #   file:
-    #     path: 'precheck_{{ inventory_hostname }}.txt'
-    #     state: touch
-    #   when: output is defined
+    - name: Creates file
+      file:
+        path: "precheck_{{ inventory_hostname }}.txt"
+        state: touch
+      when: output is defined
 
-    # - name: IOS run commands and capture
-    #   include_role:
-    #     name: command_capture
-    #   vars:
-    #     command: "{{ item.cmd }}"
-    #     file_name: "{{ item.file }}"
-    #     device_type: ios
-    #     check_type: pre
-    #   loop: "{{ check_commands.ios }}"
+    - name: IOS run commands and capture
+      include_role:
+        name: command_capture
+      vars:
+        command: "{{ item.cmd }}"
+        file_name: "{{ item.file }}"
+        device_type: ios
+        check_type: pre
+      loop: "{{ check_commands.ios }}"
