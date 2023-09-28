@@ -7,5 +7,4 @@ image:
       version: "Some other version"
   ios:
     os_dst_filename: "cat9k_iosxe.17.09.03.SPA.bin"
-    device_vol: "bootflash"
     os_md5: "68aa9aa3449616e245fdba42a8258dbb"
