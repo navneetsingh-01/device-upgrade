@@ -16,25 +16,52 @@
   register: dir_output
 
 - block:
-    - name: Determine if primary device name is bootflash
+    - name: Determine if primary volume name is bootflash
       set_fact: device_primary_flash="bootflash"
       when: dir_output['stdout'][0][:40].find(' bootflash:') != -1
 
-    - name: Determine if primary device name is flash
+    - name: Determine if primary volume name is flash
       set_fact: device_primary_flash="flash"
       when: dir_output['stdout'][0][:40].find(' flash:') != -1
 
-    - name: Determine if primary device name is flash-1
+    - name: Determine if primary volume name is flash-1
       set_fact: device_primary_flash="flash-1"
       when: dir_output['stdout'][0][:40].find(' flash-1:') != -1
-
   rescue:
-    - name: Determine whether stby-bootflash exists
+    - name: If none of the above
       set_fact: device_primary_flash="bootflash"
 
-- name: debug primary flash
+- name: debug primary flash name
   debug: msg="{{ device_primary_flash }}"
   poll: 0
+
+- name: Device secondary volume name
+  ios_command:
+    commands:
+      - "show file systems"
+  register: file_systems_output
+
+- block:
+    - name: Determine if secondary volume name is stby-bootflash
+      set_fact: device_secondary_flash="stby-bootflash"
+      when: file_systems_output['stdout'][0].find(' stby-bootflash:') != -1
+
+    - name: Determine if secondary volume name is slavebootflash
+      set_fact: device_secondary_flash="slavebootflash"
+      when: file_systems_output['stdout'][0].find(' slavebootflash:') != -1
+
+    - name: Determine if secondary volume name is flash-2
+      set_fact: device_secondary_flash="flash-2"
+      when: file_systems_output['stdout'][0].find(' flash-2:') != -1
+  rescue:
+    - name: Determine whether stby-bootflash exists
+      set_fact: device_secondary_flash="stby-bootflash"
+
+- name: debug secondary flash
+  debug: msg="{{ device_secondary_flash }}"
+  poll: 0
+
+  
 # - block:
 #     - name: run dir stby-bootflash
 #       ios_command:
