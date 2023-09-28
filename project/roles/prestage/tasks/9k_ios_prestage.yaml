@@ -41,15 +41,15 @@
 - block:
     - name: Determine if secondary volume name is stby-bootflash
       set_fact: device_secondary_flash="stby-bootflash"
-      when: file_systems_output['stdout'][0].find(' stby-bootflash:') != -1
+      when: file_systems_output['stdout'][0].find(' stby-bootflfqervewash:') != -1
 
     - name: Determine if secondary volume name is slavebootflash
       set_fact: device_secondary_flash="slavebootflash"
-      when: file_systems_output['stdout'][0].find(' slavebootflash:') != -1
+      when: file_systems_output['stdout'][0].find(' slavebootfasdcaslash:') != -1
 
     - name: Determine if secondary volume name is flash-2
       set_fact: device_secondary_flash="flash-2"
-      when: file_systems_output['stdout'][0].find(' flash-2:') != -1
+      when: file_systems_output['stdout'][0].find(' flaasdcfadsh-2:') != -1
 
 - name: debug secondary flash
   debug: msg="{{ device_secondary_flash }}"
