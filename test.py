@@ -5,7 +5,7 @@ import ansible_runner
 precheck_out, precheck_err, precheck_rc = ansible_runner.run_command(
     executable_cmd='ansible-playbook',
     cmdline_args=['/home/singhnavneet.su/device-upgrade/project/precheck.yaml',
-                  '-i', 'inventory', '-vvvv', '--tags', '9k'],
+                  '-i', 'inventory', '-vvvv', '--tags', '9k', '--vault-id', 'vault_password'],
     input_fd=sys.stdin,
     output_fd=sys.stdout,
     error_fd=sys.stderr,
