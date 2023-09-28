@@ -13,9 +13,26 @@
   ios_command:
     commands:
       - "dir"
-  register: device_primary_flash
+  register: dir_output
 
-- name: debug flash
+- block:
+    - name: Determine if primary device name is bootflash
+      set_fact: device_primary_flash="bootflash"
+      when: dir_output['stdout'][0][:40].find('bootflash:') != -1
+
+    - name: Determine if primary device name is flash
+      set_fact: device_primary_flash="flash"
+      when: dir_output['stdout'][0][:40].find('flash:') != -1
+
+    - name: Determine if primary device name is flash-1
+      set_fact: device_primary_flash="flash-1"
+      when: dir_output['stdout'][0][:40].find('flash-1:') != -1
+
+  rescue:
+    - name: Determine whether stby-bootflash exists
+      set_fact: device_primary_flash="bootflash"
+
+- name: debug primary flash
   debug: msg="{{ device_primary_flash }}"
   poll: 0
 
