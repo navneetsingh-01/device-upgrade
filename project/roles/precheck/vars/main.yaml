@@ -188,3 +188,5 @@ check_commands:
 image:
   ios:
     os_dst_filename: "cat9k_iosxe.17.09.03.SPA.bin"
+
+user_2: "second user"

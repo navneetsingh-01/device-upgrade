@@ -2,9 +2,3 @@
 rsync_u: "svc_rsync"
 rsync_p: "C0mPl!ncEScp89"
 rsync_host: "syd-netft-lp001"
-image:
-  ios:
-    os_dst_filename: "cat9k_iosxe.17.09.03.SPA.bin"
-    device_vol: "bootflash"
-    rom_dst_filename: "cat9k_iosxe.17.09.03.SPA.bin"
-    os_md5: "68aa9aa3449616e245fdba42a8258dbb"

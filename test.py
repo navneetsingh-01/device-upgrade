@@ -4,8 +4,8 @@ import ansible_runner
 
 precheck_out, precheck_err, precheck_rc = ansible_runner.run_command(
     executable_cmd='ansible-playbook',
-    cmdline_args=['/home/singhnavneet.su/os-upgrade/project/precheck.yaml',
-                  '-i', 'inventory', '-vvvv', '--tags', '9k'],
+    cmdline_args=['/Users/singhnavneet/Documents/projects/nxos-upgrade/upgrade-combined-test/project/precheck.yaml',
+                  '-i', 'inventory', '-vvvv', '-k', '--tags', '7k'],
     input_fd=sys.stdin,
     output_fd=sys.stdout,
     error_fd=sys.stderr,
@@ -17,8 +17,8 @@ print("err: {}".format(precheck_rc))
 if precheck_rc == 0:
     prestage_out, prestage_err, prestage_rc = ansible_runner.run_command(
         executable_cmd='ansible-playbook',
-        cmdline_args=['/home/singhnavneet.su/os-upgrade/project/prestage.yaml',
-                      '-i', 'inventory', '-vvvv', '--tags', '9k'],
+        cmdline_args=['/Users/singhnavneet/Documents/projects/nxos-upgrade/upgrade-combined-test/project/prestage.yaml',
+                      '-i', 'inventory', '-vvvv', '-k', '--tags', '7k'],
         input_fd=sys.stdin,
         output_fd=sys.stdout,
         error_fd=sys.stderr,
@@ -30,8 +30,8 @@ if precheck_rc == 0:
 if precheck_rc == 0 and prestage_rc == 0:
     os_install_out, os_install_err, os_install_rc = ansible_runner.run_command(
         executable_cmd='ansible-playbook',
-        cmdline_args=['/home/singhnavneet.su/os-upgrade/project/os_install.yaml',
-                      '-i', 'inventory', '-vvvv', '--tags', '9k'],
+        cmdline_args=['/Users/singhnavneet/Documents/projects/nxos-upgrade/upgrade-combined-test/project/os_install.yaml',
+                      '-i', 'inventory', '-vvvv', '-k', '--tags', '7k'],
         input_fd=sys.stdin,
         output_fd=sys.stdout,
         error_fd=sys.stderr,
@@ -40,13 +40,11 @@ if precheck_rc == 0 and prestage_rc == 0:
     print("out: {}".format(os_install_err))
     print("err: {}".format(os_install_rc))
 
-time.sleep(600)
-
 if precheck_rc == 0 and prestage_rc == 0 and os_install_rc == 0:
     postcheck_out, postcheck_err, postcheck_rc = ansible_runner.run_command(
         executable_cmd='ansible-playbook',
-        cmdline_args=['/home/singhnavneet.su/os-upgrade/project/postcheck.yaml',
-                      '-i', 'inventory', '-vvvv', '--tags', '9k'],
+        cmdline_args=['/Users/singhnavneet/Documents/projects/nxos-upgrade/upgrade-combined-test/project/postcheck.yaml',
+                      '-i', 'inventory', '-vvvv', '-k', '--tags', '7k'],
         input_fd=sys.stdin,
         output_fd=sys.stdout,
         error_fd=sys.stderr,
