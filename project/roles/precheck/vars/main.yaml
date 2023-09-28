@@ -184,7 +184,3 @@ check_commands:
 
     - cmd: "show run | in boot"
       file: show_run_in_boot.txt
-
-image:
-  ios:
-    os_dst_filename: "cat9k_iosxe.17.09.03.SPA.bin"
