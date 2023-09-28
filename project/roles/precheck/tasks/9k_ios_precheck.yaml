@@ -11,13 +11,13 @@
       debug: msg="{{ ansible_net_image }}"
       when: output is defined
 
-    # - name: Assert That It is Running The Desired boot Image
-    #   assert:
-    #     that:
-    #       - "'{{ image.ios.os_dst_filename }}' not in '{{ ansible_net_image }}'"
-    #     success_msg: Device not running target image.
-    #     fail_msg: Device is already running target image.
-    #   ignore_errors: true
+    - name: Assert That It is Running The Desired boot Image
+      assert:
+        that:
+          - "'{{ image.ios.os_dst_filename }}' not in '{{ ansible_net_image }}'"
+        success_msg: Device not running target image.
+        fail_msg: Device is already running target image.
+      ignore_errors: true
 
     # - name: Gather CPU usage and free memory
     #   ios_command:
