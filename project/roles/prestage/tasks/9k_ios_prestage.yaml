@@ -31,6 +31,7 @@
 - name: debug primary flash name
   debug: msg="{{ device_primary_flash }}"
   poll: 0
+  when: device_primary_flash is defined
 
 - name: Device secondary volume name
   ios_command:
@@ -54,6 +55,7 @@
 - name: debug secondary flash
   debug: msg="{{ device_secondary_flash }}"
   poll: 0
+  when: device_secondary_flash is defined
 
 - block:
     - name: ch1
