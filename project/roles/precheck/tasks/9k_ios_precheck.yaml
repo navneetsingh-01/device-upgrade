@@ -70,6 +70,9 @@
       poll: 0
       when: seconday_flash_space_output is defined
 
+    - name: Assert that IOS device can be upgraded - secondary flash
+      debug: msg={{ seconday_flash_space_output['stdout'][0].find('(') }}
+
     # - assert:
     #     that:
     #       - 85 > "{{ item.split()[-1] | replace('%', '') }}" | int
