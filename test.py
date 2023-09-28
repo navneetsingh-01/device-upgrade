@@ -15,10 +15,11 @@ import ansible_runner
 # print("err: {}".format(precheck_rc))
 
 # if precheck_rc == 0:
+rsync_host = input("Enter the value of rsync_host: ")
 prestage_out, prestage_err, prestage_rc = ansible_runner.run_command(
     executable_cmd='ansible-playbook',
     cmdline_args=['/home/singhnavneet.su/device-upgrade/project/prestage.yaml',
-                  '-i', 'inventory', '-vvvv', '--tags', '9k', '--vault-id', 'vault_password', '--extra-vars', 'rsync_host=syd-netft-lp001'],
+                  '-i', 'inventory', '-vvvv', '--tags', '9k', '--vault-id', 'vault_password', '--extra-vars', f'rsync_host=${rsync_host}'],
     input_fd=sys.stdin,
     output_fd=sys.stdout,
     error_fd=sys.stderr,
