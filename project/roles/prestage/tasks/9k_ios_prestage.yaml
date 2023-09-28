@@ -4,7 +4,7 @@
     save_when: always
 
 - name: host
-  debug: msg="{{ rsync_host }}"
+  debug: msg="{{ ansible_net_memfree_mb }}"
   poll: 0
 # - name: Enable scp server
 #   cisco.ios.ios_config:
