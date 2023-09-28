@@ -58,6 +58,18 @@
       poll: 0
       when: device_secondary_flash is defined
 
+    - name: Check free memory in secondary flash
+      ios_command:
+        commands:
+          - "dir {{ device_secondary_flash }}: | in free"
+      when: device_secondary_flash is defined
+      register: seconday_flash_space_output
+
+    - name: debug secondary flash ouput
+      debug: msg="{{ seconday_flash_space_output }}"
+      poll: 0
+      when: seconday_flash_space_output is defined
+
     # - assert:
     #     that:
     #       - 85 > "{{ item.split()[-1] | replace('%', '') }}" | int
