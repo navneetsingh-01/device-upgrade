@@ -3,6 +3,13 @@
   ios_config:
     save_when: always
 
+- name: Gather facts to check version IOS
+  ios_facts:
+    gather_subset:
+      - min
+      - hardware
+  register: output
+
 - name: host
   debug: msg="{{ ansible_net_memfree_mb }}"
   poll: 0
