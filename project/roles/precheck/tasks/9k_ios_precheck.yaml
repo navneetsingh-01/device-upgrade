@@ -71,7 +71,10 @@
       when: seconday_flash_space_output is defined
 
     - name: Assert that IOS device can be upgraded - secondary flash
-      debug: msg={{ seconday_flash_space_output['stdout'][0].find('(') }}
+      set_fact: remaining={{ seconday_flash_space_output['stdout'][0][seconday_flash_space_output['stdout'][0].find('(')+1:] }}
+
+    - name: Assert that IOS device can be upgraded - secondary flash
+      debug: msg={{ remaining }}
 
     # - assert:
     #     that:
