@@ -1,0 +1,10 @@
+---
+- block:
+    - name: First task 7k
+      debug:
+        msg: "hello from the ansible-runner testrole 7k"
+
+    - name: Second task 7k
+      debug:
+        msg: "Default value of enable_logging is {{ enable_logging }}"
+      tags: 7k

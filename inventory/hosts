@@ -1,0 +1,8 @@
+all:
+  hosts: syd-axs-11
+  vars:
+    ansible_connection: network_cli
+    ansible_port: 22
+    ansible_network_os: ios
+    ansible_python_interpreter: ~/venv/bin/python3
+    ansible_password: (!IWrIx=wYdB|{3pJfrE

@@ -1,0 +1,10 @@
+---
+- name: Install an operating system by setting the boot options and optionally select to install using ISSU
+  hosts: all
+  connection: local
+  gather_facts: false
+  serial: 5
+  strategy: free
+  tasks:
+    - import_role:
+        name: os_install

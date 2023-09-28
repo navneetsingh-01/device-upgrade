@@ -1,0 +1,141 @@
+---
+- name: Save running config before starting
+  ios_config:
+    save_when: always
+
+# - name: Enable scp server
+#   cisco.ios.ios_config:
+#     lines: ip scp server enable
+#     save_when: never
+#   ignore_errors: true
+
+- block:
+    - name: run dir stby-bootflash
+      ios_command:
+        commands:
+          - "dir stby-bootflash:"
+      register: output
+      tags: ios
+
+    - name: Determine whether stby-bootflash exists
+      set_fact: stby_bootflash="yes"
+      when: output is defined
+
+    - name: Determine whether stby-bootflash exists
+      set_fact: stby_bootflash="no"
+      when: output is not defined
+
+  rescue:
+    - name: Determine whether stby-bootflash exists
+      set_fact: stby_bootflash="no"
+
+- name: debug stby-bootflash
+  debug: msg="{{ stby_bootflash }}"
+  poll: 0
+
+# - name: Removing inactive software images
+#   cli_command:
+#     command: "install remove inactive"
+#     check_all: True
+#     prompt:
+#       - "Do you want to remove the above files"
+#     answer:
+#       - "y"
+
+# - name: Remote copy of IOS image to bootflash
+#   ios_command:
+#     commands:
+#       - command: "copy scp://{{ rsync_u }}:{{ rsync_p }}@{{ rsync_host }}/rsynced_data/IOS/{{ image.ios.os_dst_filename }} {{ image.ios.device_vol }}:/"
+#         prompt: "Destination filename"
+#         answer: "\r"
+#   vars:
+#     ansible_command_timeout: 10800
+#   register: output
+
+# - name: Remote copy of Rommon image to bootflash
+#   ios_command:
+#     commands:
+#       - command: "copy scp://{{ rsync_u }}:{{ rsync_p }}@{{ rsync_host }}/rsynced_data/IOS/{{ image.ios.rom_dst_filename }} {{ image.ios.device_vol }}:/"
+#         prompt: "Destination filename"
+#         answer: "\r"
+#   vars:
+#     ansible_command_timeout: 10800
+#   register: output
+
+# - name: Copy Rommon image from bootflash to stby-bootflash
+#   cli_command:
+#     command: "copy bootflash:/{{ image.ios.rom_dst_filename }} stby-bootflash:/"
+#     check_all: True
+#     prompt:
+#       - "Destination filename"
+#       - "Do you want to"
+#     answer:
+#       - "{{ image.ios.rom_dst_filename }}"
+#       - "y"
+
+# - name: Copy IOS image from bootflash to stby-bootflash
+#   cli_command:
+#     command: "copy bootflash:/{{ image.ios.os_dst_filename }} stby-bootflash:/"
+#     check_all: True
+#     prompt:
+#       - "Destination filename"
+#       - "Do you want to"
+#     answer:
+#       - "{{ image.ios.os_dst_filename }}"
+#       - "y"
+
+- name: Get md5 of IOS file in bootflash
+  ios_command:
+    commands:
+      - "verify /md5 bootflash:/{{ image.ios.os_dst_filename }}"
+  register: output
+
+# - name: Print MD5 of IOS file As Calculated On The Switch
+#   debug: msg="{{ output['stdout'][0] }}"
+
+- name: Assert that MD5 of bootflash IOS file Is Correct
+  assert:
+    that:
+      - image.ios.os_md5 == "{{ output['stdout'][0].split('=')[-1] | replace(' ', '') }}"
+
+# - name: Get md5 of Rommon file in bootflash
+#   ios_command:
+#     commands:
+#       - "verify /md5 bootflash:/{{ image.ios.rom_dst_filename }}"
+#   register: output
+
+# - name: Print MD5 of Rommon file As Calculated On The Switch
+#   debug: msg="{{ output['stdout'][0] }}"
+
+# - name: Assert that MD5 of bootflash Rommon file Is Correct
+#   assert:
+#     that:
+#       - image.ios.rom_md5 == "{{ output['stdout'][0].split('=')[-1] | replace(' ', '') }}"
+
+- name: Get md5 of IOS file in stby-bootflash
+  ios_command:
+    commands:
+      - "verify /md5 stby-bootflash:/{{ image.ios.os_dst_filename }}"
+  register: output
+
+# - name: Print MD5 of IOS file As Calculated On The Switch
+#   debug: msg="{{ output['stdout'][0] }}"
+
+- name: Assert that MD5 of stby-bootflash IOS file Is Correct
+  assert:
+    that:
+      - image.ios.os_md5 == "{{ output['stdout'][0].split('=')[-1] | replace(' ', '') }}"
+# - name: Get md5 of Rommon file in stby-bootflash
+#   ios_command:
+#     commands:
+#       - "verify /md5 stby-bootflash:/{{ image.ios.rom_dst_filename }}"
+#   register: output
+
+# - name: Print MD5 of Rommon file As Calculated On The Switch
+#   debug: msg="{{ output['stdout'][0] }}"
+
+# - name: Assert that MD5 of stby-bootflash Rommon file Is Correct
+#   assert:
+#     that:
+#       - image.ios.rom_md5 == "{{ output['stdout'][0].split('=')[-1] | replace(' ', '') }}"
+

@@ -1,0 +1,106 @@
+from ansible.module_utils.basic import AnsibleModule
+from difflib import Differ
+import os
+DOCUMENTATION = '''
+---
+module: command_comparison
+short_description: precheck and postcheck command comparison
+description:
+    - Created to compare a precheck file with a postcheck file and know what the changes were
+requirements:
+    - run precheck using this ansible repo
+    - run postcheck using this ansible repo
+notes:
+    - There are files stored on the host when precheck and a postcheck workflows are ran.
+    - Both files must be present for this module to succeed.
+    - Comparison results are printed to screen and written to file.
+options:
+    host:
+        description:
+            - Device being checked
+        required: true
+        default: null
+    command:
+        description:
+            - Device Command for which we want to check output
+        required: true
+        default: null
+    file_name:
+        description:
+            - File name where command output is stored
+        required: true
+        default: null
+'''
+
+EXAMPLES = '''
+- name: Compare command output in pre and post checks
+  nxos_upgrade:
+    host: "{{ inventory_hostname }}"
+    command: show version
+    file_name: show_version.txt
+'''
+
+
+class CommandOutputCheck(object):
+    """
+    This is a one stop shop to read the files, compare the output and kick back to ansible
+    """
+
+    def __init__(self, module):
+        self.module = module
+        self.host = module.params['host']
+        self.command = module.params['command']
+        self.precheck_path = f"prechecks/{module.params['host']}/{module.params['file_name']}"
+        self.postcheck_path = f"postchecks/{module.params['host']}/{module.params['file_name']}"
+        self.dir = 'post_analysis/'
+        self.analysis_file_prefix = 'CMD_DELTA_'
+        self.a_filename = f'{self.dir}/{self.analysis_file_prefix}{self.host}.txt'
+
+    def analyze(self):
+        try:
+            if not os.path.exists(self.precheck_path):
+                self.module.exit_json(
+                    changed=False, text=f"Precheck file for {self.command} not found.", command=self.command, a_file=self.a_filename)
+            if not os.path.exists(self.postcheck_path):
+                self.module.exit_json(
+                    changed=False, text=f"Postcheck file for {self.command} not found.", command=self.command, a_file=self.a_filename)
+
+            with open(self.precheck_path, 'r') as pre_file, open(self.postcheck_path, 'r') as post_file:
+                differ = Differ()
+                preresults = f'\n******FOUND DELTAS FOR COMMAND: {self.command} *************\n'
+                results = [l for l in differ.compare(
+                    pre_file.readlines(), post_file.readlines())]
+
+            if results:
+                changes_only = '\n'.join([l for l in results if l.startswith(
+                    '+ ') or l.startswith('- ') or l.startswith('? ')])
+                if not os.path.exists(self.dir):
+                    os.mkdir(self.dir)
+                if changes_only:
+                    with open(self.a_filename, 'a+') as analysis_file:
+                        analysis_file.write(preresults + changes_only)
+
+                    self.module.exit_json(
+                        changed=True, text=changes_only, command=self.command, a_file=self.a_filename)
+            self.module.exit_json(
+                changed=False, text="No changes.", command=self.command, a_file=self.a_filename)
+        except Exception as err:
+            self.module.fail_json(msg=str(err))
+
+
+def main():
+    module = AnsibleModule(
+        argument_spec=dict(
+            host=dict(required=True, type='str'),
+            command=dict(required=True, type='str'),
+            file_name=dict(required=True, type='str', no_log=True)
+        ),
+        supports_check_mode=False,
+    )
+
+    session = CommandOutputCheck(module)
+    session.analyze()
+
+
+if __name__ == '__main__':
+    main()

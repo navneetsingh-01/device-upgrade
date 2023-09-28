@@ -1,0 +1,8 @@
+---
+- name: just print a message to stdout
+  import_tasks: 9k_ios_install.yaml
+  tags: 9k
+
+- name: just print a message to stdout
+  import_tasks: 7k_ios_install.yaml
+  tags: 7k

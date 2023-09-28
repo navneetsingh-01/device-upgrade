@@ -1,0 +1,12 @@
+---
+- name: CAT 9k prestage start
+  import_tasks: 9k_ios_prestage.yaml
+  vars:
+    ansible_command_timeout: 10800
+  tags: 9k
+
+- name: CAT 7k prestage start
+  import_tasks: 7k_ios_prestage.yaml
+  vars:
+    ansible_command_timeout: 10800
+  tags: 7k

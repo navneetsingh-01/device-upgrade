@@ -1,0 +1,8 @@
+---
+- name: IOS 9K postchecks start
+  import_tasks: 9k_ios_postcheck.yaml
+  tags: 9k
+
+- name: IOS 9K postchecks start
+  import_tasks: 7k_ios_postcheck.yaml
+  tags: 7k

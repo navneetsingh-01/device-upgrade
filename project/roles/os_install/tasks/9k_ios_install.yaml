@@ -1,0 +1,57 @@
+---
+- block:
+    - name: Gather facts to gather current image file
+      ios_facts:
+        gather_subset:
+          - min
+          - hardware
+      register: output
+
+    - name: Show installed boot image file
+      debug: msg="{{ ansible_net_image }}"
+      when: output is defined
+
+    - name: Now Upgrading The Switch
+      debug: msg="Upgrading Switch {{inventory_hostname}}"
+
+    # - name: Ensure that Configuration register is 0x1102
+    #   cisco.ios.ios_config:
+    #     lines: config-register 0x2102
+    #     save_when: always
+
+    # - name: Run upgrade commands
+    #   ios_command:
+    #     commands:
+    #       - "conf t"
+    #       - "no boot system"
+    #       - "boot system bootflash:{{ image.ios.rom_dst_filename }}"
+    #       - "boot system bootflash:{{ image.ios.os_dst_filename }}"
+    #       - "boot system bootflash:{{ ansible_net_image.split(':')[-1] | replace('/', '') }}"
+    #   when: image.ios.rom_dst_filename is defined
+    #   vars:
+    #     ansible_network_os: cisco.ios.ios
+    #     ansible_command_timeout: 600
+
+    - name: Run upgrade commands
+      ios_command:
+        commands:
+          - "conf t"
+          - "no boot system"
+          - "boot system bootflash:{{ image.ios.os_dst_filename }}"
+          - "boot system bootflash:{{ ansible_net_image.split(':')[-1] | replace('/', '') }}"
+      vars:
+        ansible_command_timeout: 600
+      when: image.ios.rom_dst_filename is not defined
+
+    - name: Save running config before exiting
+      ios_config:
+        save_when: always
+
+    - name: Reload the device
+      cli_command:
+        command: "reload"
+        check_all: True
+        prompt:
+          - "Proceed with reload?"
+        answer:
+          - "\r"

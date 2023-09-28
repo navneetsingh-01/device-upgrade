@@ -1,0 +1,101 @@
+---
+- block:
+    - name: Gather facts to check version IOS
+      ios_facts:
+        gather_subset:
+          - min
+          - hardware
+      register: output
+
+    - name: Show installed boot image version
+      debug: msg="{{ ansible_net_image }}"
+      when: output is defined
+
+    - name: Assert That It is Running The Desired boot Image
+      assert:
+        that:
+          - "'{{ image.ios.os_dst_filename }}' in '{{ ansible_net_image }}'"
+        success_msg: Device running target image.
+        fail_msg: Device not running target image.
+
+    - name: Gather CPU usage and free memory
+      ios_command:
+        commands:
+          - "show processes cpu"
+      register: output
+
+    - name: Assert that IOS device can be upgraded
+      assert:
+        that:
+          - '"ios" == "{{ ansible_net_system }}"'
+          - 1000 < "{{ ansible_net_memfree_mb | default('1001') }}" | int
+        success_msg: Device is in healthy state.
+        fail_msg: Device should be manually verified.
+      when: ansible_net_memfree_mb is defined
+
+    - assert:
+        that:
+          - 85 > "{{ item.split()[-1] | replace('%', '') }}" | int
+      loop: "{{ output['stdout'][0].split('\n') }}"
+      when: "'five minutes:' in item"
+
+    - name: Creates directory
+      file:
+        path: "postchecks/{{ inventory_hostname }}"
+        state: directory
+      when: output is defined
+      run_once: true
+
+    - name: Remove existing file if it exists
+      file:
+        path: "postcheck_{{ inventory_hostname }}.txt"
+        state: absent
+      when: output is defined
+
+    - name: Creates file
+      file:
+        path: "postcheck_{{ inventory_hostname }}.txt"
+        state: touch
+      when: output is defined
+
+    - name: IOS run commands and capture
+      include_role:
+        name: command_capture
+      vars:
+        command: "{{ item.cmd }}"
+        file_name: "{{ item.file }}"
+        device_type: ios
+        check_type: post
+      loop: "{{ check_commands.ios }}"
+
+    - name: Creates analysis directory
+      file:
+        path: "post_analysis/"
+        state: directory
+      when: output is defined
+
+    - name: Remove existing file if it exists
+      file:
+        path: "post_analysis/CMD_DELTA_{{ inventory_hostname }}.txt"
+        state: absent
+      when: output is defined
+
+    - name: Creates file
+      file:
+        path: "post_analysis/CMD_DELTA_{{ inventory_hostname }}.txt"
+        state: touch
+      when: output is defined
+
+    - name: Analyze precheck and postcheck command outputs
+      file_compare:
+        host: "{{ inventory_hostname }}"
+        command: "{{ item.cmd }}"
+        file_name: "{{ item.file }}"
+      loop: "{{ check_commands.ios }}"
+      no_log: true
+
+    # - name: Display findings
+    #   debug: msg="There are deltas in the output of command:{{item.command}}. Find exact differences in file:{{item.a_file}}"
+    #   when: "{{item.changed == true}}"
+    #   with_items: "{{r.results}}"
+  tags: ios

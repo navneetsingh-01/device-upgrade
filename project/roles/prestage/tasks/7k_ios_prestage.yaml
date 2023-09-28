@@ -1,0 +1,13 @@
+---
+- block:
+    - name: First task 7k
+      debug:
+        msg: "hello from the ansible-runner testrole 7k"
+
+    - name: Second task 7k
+      debug:
+        msg: "hello from the ansible-runner testrole 7k"
+
+    - name: Third task 7k
+      debug:
+        msg: "Using group variable {{ image.ios.device }}"

@@ -1,0 +1,8 @@
+---
+- name: CAT 9K prechecks starting
+  import_tasks: 9k_ios_precheck.yaml
+  tags: 9k
+
+- name: CAT 7K prechecks starting
+  import_tasks: 7k_ios_precheck.yaml
+  tags: 7k

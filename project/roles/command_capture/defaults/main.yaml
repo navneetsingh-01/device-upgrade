@@ -1,0 +1,5 @@
+---
+command: "show version"
+file_name: "show_version.txt"
+device_type: "ios"
+check_type: pre

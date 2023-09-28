@@ -1,0 +1,15 @@
+---
+- block:
+    - name: First task 7k
+      debug:
+        msg: "hello from the ansible-runner testrole 7k"
+
+    - name: Second task 7k
+      debug:
+        msg: "hello from the ansible-runner testrole 7k"
+
+    - name: Testing library
+      file_compare:
+        host: "Some host"
+        command: "Some command"
+        file_name: "Some file"

@@ -1,0 +1,13 @@
+---
+- block:
+    - name: First task 7k
+      debug:
+        msg: "hello from the ansible-runner testrole 7k"
+
+    - name: Second task 7k
+      debug:
+        msg: "hello from the ansible-runner testrole 7k"
+
+    - name: Third task task 7k
+      debug:
+        msg: "My name is {{user_2}}"

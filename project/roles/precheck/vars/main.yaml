@@ -1,0 +1,190 @@
+---
+check_commands:
+  7k:
+    - cmd: show vdc
+      file: show_vdc.txt
+  nxos:
+    - cmd: show run
+      file: show_run.txt
+
+    - cmd: show cdp nei
+      file: show_cdp_nei.txt
+
+    - cmd: show port-channel summary
+      file: show_port_channel_summ.txt
+
+    - cmd: show inventory
+      file: show_inventory.txt
+
+    - cmd: show feature
+      file: show_feature.txt
+
+    - cmd: show ip route vrf all
+      file: show_ip_route_vrf_all.txt
+
+    - cmd: show version
+      file: show_version.txt
+
+    - cmd: show mac address-table
+      file: show_mac_address_table.txt
+
+    - cmd: show ver mod 1 epld
+      file: show_ver_mod_1_epld.txt
+
+    - cmd: show ip route hmm vrf all
+      file: show_ip_route_hmm_vrf_all.txt
+
+    - cmd: show ip route hmm vrf all | i hmm
+      file: show_ip_route_hmm_vrf_all_i_hmm.txt
+
+    - cmd: sh ip arp vrf all
+      file: sh_ip_arp_vrf_all.txt
+
+    - cmd: sh ip arp vrf SFDC
+      file: sh_ip_arp_vrf_SFDC.txt
+
+    - cmd: sh ip arp vrf PROTECTED_2
+      file: sh_ip_arp_vrf_PROTECTED_2.txt
+
+    - cmd: sh ip arp vrf PROTECTED_1
+      file: sh_ip_arp_vrf_PROTECTED_1.txt
+
+    - cmd: sh bgp l2vpn evpn summary
+      file: sh_bgp_l2vpn_evpn_summary.txt
+
+    - cmd: sh ip arp vrf SFDC
+      file: sh_ip_arp_vrf_SFDC.txt
+
+    - cmd: sh ip arp vrf PROTECTED_2
+      file: sh_ip_arp_vrf_PROTECTED_2.txt
+
+    - cmd: sh ip arp vrf PROTECTED_1
+      file: sh_ip_arp_vrf_PROTECTED_1.txt
+
+    - cmd: sh bgp l2vpn evpn summary
+      file: sh_bgp_l2vpn_evpn_summary.txt
+
+    - cmd: sh ip arp vrf PROTECTED_1
+      file: sh_ip_arp_vrf_PROTECTED_1.txt
+
+    - cmd: sh bgp l2vpn evpn summary
+      file: sh_bgp_l2vpn_evpn_summary.txt
+
+    - cmd: show ip bgp all sum
+      file: show_ip_bgp_all_sum.txt
+
+    - cmd: show ip ospf nei
+      file: show_ip_ospf_nei.txt
+
+    - cmd: sh int des
+      file: sh_int_des.txt
+
+    - cmd: sh ip int brief vrf all
+      file: sh_ip_int_brief_vrf_all.txt
+
+    - cmd: show process cpu his
+      file: show_process_cpu_his.txt
+
+    - cmd: sh environ
+      file: sh_environ.txt
+
+    - cmd: sh module
+      file: sh_module.txt
+
+    - cmd: sh vxlan
+      file: sh_vxlan.txt
+
+    - cmd: sh nve vni
+      file: sh_nve_vni.txt
+
+    - cmd: sh nve peers
+      file: sh_nve_peers.txt
+
+    - cmd: show ip route vrf all
+      file: show_ip_route_vrf_all.txt
+
+    - cmd: "show feature | in enabled"
+      file: show_feature_in_enabled.txt
+
+    - cmd: show vpc
+      file: show_vpc.txt
+
+  ios:
+    - cmd: show ip protocol
+      file: show_ip_protocol.txt
+
+    - cmd: show ip ospf nei
+      file: show_ip_ospf_nei.txt
+
+    - cmd: show cdp nei
+      file: show_cdp_nei.txt
+
+    - cmd: show etherchannel summary
+      file: show_etherchannel_summary.txt
+
+    - cmd: "show int des | ex unassigned"
+      file: show_int_des_ex_unassigned.txt
+
+    - cmd: "sh int des | ex down"
+      file: show_int_des_ex_down.txt
+
+    - cmd: "show ip int brief | ex unassigned"
+      file: show_ip_int_brief_ex_un_assigned.txt
+
+    - cmd: show process cpu sorted
+      file: show_process_cpu_sorted.txt
+
+    - cmd: show process memory sorted
+      file: show_process_memory_sorted.txt
+
+    - cmd: show environ all
+      file: show_environ_all.txt
+
+    - cmd: show module
+      file: show_module.txt
+
+    - cmd: show arp
+      file: show_arp.txt
+
+    - cmd: show ip arp
+      file: show_ip_arp.txt
+
+    - cmd: show ip route
+      file: show_ip_route.txt
+
+    - cmd: show ip bgp summary
+      file: show_ip_bgp_summary.txt
+
+    - cmd: show version
+      file: show_version.txt
+
+    - cmd: show switch
+      file: show_switch.txt
+
+    - cmd: show redundancy
+      file: show_redundancy.txt
+
+    - cmd: "dir bootflash:"
+      file: dir_bootflash.txt
+
+    - cmd: "dir all-filesystems"
+      file: dir_all_filesystems.txt
+
+    - cmd: show mac address
+      file: show_mac_address.txt
+
+    - cmd: show log
+      file: show_log.txt
+
+    - cmd: show inventory
+      file: show_inventory.txt
+
+    - cmd: show boot
+      file: show_boot.txt
+
+    - cmd: "show run | in boot"
+      file: show_run_in_boot.txt
+
+image:
+  ios:
+    os_dst_filename: "cat9k_iosxe.17.09.03.SPA.bin"

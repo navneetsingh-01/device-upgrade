@@ -1,0 +1,10 @@
+---
+- name: Starting pre-staging workflow
+  hosts: all
+  connection: local
+  gather_facts: false
+  serial: 5
+  strategy: free
+  tasks:
+    - import_role:
+        name: prestage

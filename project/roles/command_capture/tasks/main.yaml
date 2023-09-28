@@ -1,0 +1,62 @@
+---
+- name: NX-OS gather {{ command }} output
+  nxos_command:
+    commands:
+      - "{{ command }}"
+  vars:
+    ansible_network_os: cisco.nxos.nxos
+  register: nxos_output
+  failed_when: false
+  when: device_type == "nxos"
+
+- name: IOS gather {{ command }} output
+  ios_command:
+    commands:
+      - "{{ command }}"
+  vars:
+    ansible_network_os: cisco.ios.ios
+  register: ios_output
+  failed_when: false
+  when: device_type == "ios"
+
+# - name: determine command success
+#   set_fact: result = {{ file XYZ cannot be processed | warn_me() }}
+#   when: nxos_output is not defined and ios_output is not defined
+
+- name: command failure
+  debug: msg="WARNGING!! Failed to successfully run {{ command }} on {{ inventory_hostname }}. Check that command is valid for this device and device type."
+  when: result is defined and result == "failed"
+
+# - name: command success
+#   debug: msg="{{ ios_output }}"
+#   when: result is not defined and ios_output is defined and ios_output.stdout is defined
+
+# - name: command success
+#   debug: msg="{{ nxos_output }}"
+#   when: result is not defined and nxos_output is defined and nxos_output.stdout is defined
+
+- block:
+    - name: Preparing text for file
+      set_fact: text="{{ nxos_output }}"
+      when: nxos_output is defined and nxos_output.stdout is defined
+
+    - name: Preparing text for file
+      set_fact: text="{{ ios_output }}"
+      when: ios_output is defined and ios_output.stdout is defined
+
+    # - debug: msg="{{ text }}"
+
+    - name: Add {{ command }} to overall precheck text file
+      ansible.builtin.blockinfile:
+        path: "{{ check_type }}check_{{ inventory_hostname }}.txt"
+        marker: "################## {mark} OF {{ command }} OUTPUT ##################\n\n\n"
+        marker_begin: START
+        marker_end: END
+        block: "{{ text.stdout[0] }}"
+
+    - name: write {{ command }} to individual command file
+      ansible.builtin.copy:
+        content: "{{ text.stdout[0] }}"
+        dest: "{{ check_type }}checks/{{ inventory_hostname }}/{{ file_name }}"
+
+  when: (nxos_output is defined and nxos_output.stdout is defined) or (ios_output is defined and ios_output.stdout is defined)
