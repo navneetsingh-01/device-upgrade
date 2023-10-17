@@ -1,5 +1,8 @@
 all:
-  hosts: syd-axs-11
+  hosts:
+    - den3-axs-5
+    - den3-axs-6
+    - den3-axs-6b
   vars:
     ansible_connection: network_cli
     ansible_port: 22
