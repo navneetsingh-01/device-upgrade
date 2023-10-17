@@ -2,17 +2,17 @@ import time
 import sys
 import ansible_runner
 
-precheck_out, precheck_err, precheck_rc = ansible_runner.run_command(
-    executable_cmd='ansible-playbook',
-    cmdline_args=['/home/singhnavneet.su/device-upgrade/project/precheck.yaml',
-                  '-i', 'inventory', '-vvvv', '--tags', '9k', '--vault-id', 'vault_password'],
-    input_fd=sys.stdin,
-    output_fd=sys.stdout,
-    error_fd=sys.stderr,
-)
-print("rc: {}".format(precheck_out))
-print("out: {}".format(precheck_err))
-print("err: {}".format(precheck_rc))
+# precheck_out, precheck_err, precheck_rc = ansible_runner.run_command(
+#     executable_cmd='ansible-playbook',
+#     cmdline_args=['/home/singhnavneet.su/device-upgrade/project/precheck.yaml',
+#                   '-i', 'inventory', '-vvvv', '--tags', '9k', '--vault-id', 'vault_password'],
+#     input_fd=sys.stdin,
+#     output_fd=sys.stdout,
+#     error_fd=sys.stderr,
+# )
+# print("rc: {}".format(precheck_out))
+# print("out: {}".format(precheck_err))
+# print("err: {}".format(precheck_rc))
 
 # if precheck_rc == 0:
 # rsync_host = input("Enter the value of rsync_host: ")
@@ -28,22 +28,21 @@ print("err: {}".format(precheck_rc))
 # print("out: {}".format(prestage_err))
 # print("err: {}".format(prestage_rc))
 
-if precheck_rc == 0:
-    os_install_out, os_install_err, os_install_rc = ansible_runner.run_command(
-        executable_cmd='ansible-playbook',
-        cmdline_args=['/home/singhnavneet.su/device-upgrade/project/os_install.yaml',
-                      '-i', 'inventory', '-vvvv', '--tags', '9k', '--vault-id', 'vault_password'],
-        input_fd=sys.stdin,
-        output_fd=sys.stdout,
-        error_fd=sys.stderr,
-    )
-    print("rc: {}".format(os_install_out))
-    print("out: {}".format(os_install_err))
-    print("err: {}".format(os_install_rc))
+os_install_out, os_install_err, os_install_rc = ansible_runner.run_command(
+    executable_cmd='ansible-playbook',
+    cmdline_args=['/home/singhnavneet.su/device-upgrade/project/os_install.yaml',
+                    '-i', 'inventory', '-vvvv', '--tags', '9k', '--vault-id', 'vault_password'],
+    input_fd=sys.stdin,
+    output_fd=sys.stdout,
+    error_fd=sys.stderr,
+)
+print("rc: {}".format(os_install_out))
+print("out: {}".format(os_install_err))
+print("err: {}".format(os_install_rc))
 
 time.sleep(600)
 
-if precheck_rc == 0 and os_install_rc == 0:
+if os_install_rc == 0:
     postcheck_out, postcheck_err, postcheck_rc = ansible_runner.run_command(
         executable_cmd='ansible-playbook',
         cmdline_args=['/home/singhnavneet.su/device-upgrade/project/postcheck.yaml',
