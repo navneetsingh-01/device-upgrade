@@ -11,6 +11,41 @@
       debug: msg="{{ ansible_net_image }}"
       when: output is defined
 
+    - name: Device secondary volume name
+      ios_command:
+        commands:
+          - "show file systems"
+      register: file_systems_output
+
+    - block:
+        - name: Determine if secondary volume name is stby-bootflash
+          set_fact: device_secondary_flash="stby-bootflash"
+          when: file_systems_output['stdout'][0].find(' stby-bootflash:') != -1
+
+        - name: Determine if secondary volume name is slavebootflash
+          set_fact: device_secondary_flash="slavebootflash"
+          when: file_systems_output['stdout'][0].find(' slavebootflash:') != -1
+
+        - name: Determine if secondary volume name is flash-2
+          set_fact: device_secondary_flash="flash-2"
+          when: file_systems_output['stdout'][0].find(' flash-2:') != -1
+
+    - name: debug secondary flash
+      debug: msg="{{ device_secondary_flash }}"
+      poll: 0
+      when: device_secondary_flash is defined
+
+    - name: Get md5 of IOS file in secondary flash
+      ios_command:
+        commands:
+          - "verify /md5 {{ device_secondary_flash }}:/{{ image.ios.os_dst_filename }}"
+      register: output
+
+    - name: Assert that MD5 of secondary flash IOS file Is Correct
+      assert:
+        that:
+          - image.ios.os_md5 == "{{ output['stdout'][0].split('=')[-1] | replace(' ', '') }}"
+
     - name: Now Upgrading The Switch
       debug: msg="Upgrading Switch {{inventory_hostname}}"
 
