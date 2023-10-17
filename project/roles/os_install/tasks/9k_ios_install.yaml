@@ -14,34 +14,40 @@
     - name: Now Upgrading The Switch
       debug: msg="Upgrading Switch {{inventory_hostname}}"
 
-    # - name: Ensure that Configuration register is 0x1102
-    #   cisco.ios.ios_config:
-    #     lines: config-register 0x2102
-    #     save_when: always
+    - name: Device primary volume name
+      ios_command:
+        commands:
+          - "dir"
+      register: dir_output
 
-    # - name: Run upgrade commands
-    #   ios_command:
-    #     commands:
-    #       - "conf t"
-    #       - "no boot system"
-    #       - "boot system bootflash:{{ image.ios.rom_dst_filename }}"
-    #       - "boot system bootflash:{{ image.ios.os_dst_filename }}"
-    #       - "boot system bootflash:{{ ansible_net_image.split(':')[-1] | replace('/', '') }}"
-    #   when: image.ios.rom_dst_filename is defined
-    #   vars:
-    #     ansible_network_os: cisco.ios.ios
-    #     ansible_command_timeout: 600
+    - block:
+        - name: Determine if primary volume name is bootflash
+          set_fact: device_primary_flash="bootflash"
+          when: dir_output['stdout'][0][:40].find(' bootflash:') != -1
+
+        - name: Determine if primary volume name is flash
+          set_fact: device_primary_flash="flash"
+          when: dir_output['stdout'][0][:40].find(' flash:') != -1
+
+        - name: Determine if primary volume name is flash-1
+          set_fact: device_primary_flash="flash-1"
+          when: dir_output['stdout'][0][:40].find(' flash-1:') != -1
+
+    - name: debug primary flash name
+      debug: msg="{{ device_primary_flash }}"
+      poll: 0
+      when: device_primary_flash is defined
 
     - name: Run upgrade commands
       ios_command:
         commands:
           - "conf t"
           - "no boot system"
-          - "boot system bootflash:{{ image.ios.os_dst_filename }}"
-          - "boot system bootflash:{{ ansible_net_image.split(':')[-1] | replace('/', '') }}"
+          - "boot system {{ device_primary_flash }}:{{ image.ios.os_dst_filename }}"
+          - "boot system {{ device_primary_flash }}:{{ ansible_net_image.split(':')[-1] | replace('/', '') }}"
       vars:
         ansible_command_timeout: 600
-      when: image.ios.rom_dst_filename is not defined
+      when: device_primary_flash is defined
 
     - name: Save running config before exiting
       ios_config:
