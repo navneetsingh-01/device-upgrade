@@ -32,7 +32,7 @@ if precheck_rc == 0:
     os_install_out, os_install_err, os_install_rc = ansible_runner.run_command(
         executable_cmd='ansible-playbook',
         cmdline_args=['/home/singhnavneet.su/device-upgrade/project/os_install.yaml',
-                      '-i', 'inventory', '-vvvv', '--tags', '9k'],
+                      '-i', 'inventory', '-vvvv', '--tags', '9k', '--vault-id', 'vault_password'],
         input_fd=sys.stdin,
         output_fd=sys.stdout,
         error_fd=sys.stderr,
@@ -47,7 +47,7 @@ if precheck_rc == 0 and os_install_rc == 0:
     postcheck_out, postcheck_err, postcheck_rc = ansible_runner.run_command(
         executable_cmd='ansible-playbook',
         cmdline_args=['/home/singhnavneet.su/device-upgrade/project/postcheck.yaml',
-                      '-i', 'inventory', '-vvvv', '--tags', '9k'],
+                      '-i', 'inventory', '-vvvv', '--tags', '9k', '--vault-id', 'vault_password'],
         input_fd=sys.stdin,
         output_fd=sys.stdout,
         error_fd=sys.stderr,
