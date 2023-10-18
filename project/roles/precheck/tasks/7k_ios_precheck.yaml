@@ -8,6 +8,6 @@
       debug:
         msg: "hello from the ansible-runner testrole 7k"
 
-    - name: Third task task 7k
-      debug:
-        msg: "My name is {{user_2}}"
+    # - name: Third task task 7k
+    #   debug:
+    #     msg: "My name is {{user_2}}"
