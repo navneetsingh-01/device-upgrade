@@ -5,7 +5,7 @@ all:
     ansible_port: 22
     ansible_network_os: ios
     ansible_python_interpreter: ~/venv/bin/python3
-    ansible_command_timeout: 300
+    ansible_command_timeout: 900
     ansible_password: !vault |
       $ANSIBLE_VAULT;1.1;AES256
       35336231623838623739383735396130646436633366373538313561316330313365613539663433
