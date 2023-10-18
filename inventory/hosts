@@ -1,9 +1,6 @@
 all:
   hosts:
     atl1-axs-28:
-    atl1-axs-29a:
-    atl1-axs-31:
-    atl1-axs-32:
   vars:
     ansible_connection: network_cli
     ansible_port: 22
