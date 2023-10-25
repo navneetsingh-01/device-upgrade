@@ -4,7 +4,7 @@ import ansible_runner
 
 precheck_out, precheck_err, precheck_rc = ansible_runner.run_command(
     executable_cmd='ansible-playbook',
-    cmdline_args=['/home/singhnavneet.su/device-upgrade/project/precheck.yaml',
+    cmdline_args=['/home/bgopidi.su/device-upgrade/project/precheck.yaml',
                   '-i', 'inventory', '-vvvv', '--tags', '9k', '--vault-id', 'vault_password'],
     input_fd=sys.stdin,
     output_fd=sys.stdout,
@@ -18,7 +18,7 @@ print("err: {}".format(precheck_rc))
 # rsync_host = input("Enter the value of rsync_host: ")
 # prestage_out, prestage_err, prestage_rc = ansible_runner.run_command(
 #     executable_cmd='ansible-playbook',
-#     cmdline_args=['/home/singhnavneet.su/device-upgrade/project/prestage.yaml',
+#     cmdline_args=['/home/bgopidi.su/device-upgrade/project/prestage.yaml',
 #                   '-i', 'inventory', '-vvvv', '--tags', '9k', '--vault-id', 'vault_password', '--extra-vars', f'rsync_host={rsync_host}'],
 #     input_fd=sys.stdin,
 #     output_fd=sys.stdout,
@@ -31,7 +31,7 @@ print("err: {}".format(precheck_rc))
 if precheck_rc == 0:
     os_install_out, os_install_err, os_install_rc = ansible_runner.run_command(
         executable_cmd='ansible-playbook',
-        cmdline_args=['/home/singhnavneet.su/device-upgrade/project/os_install.yaml',
+        cmdline_args=['/home/bgopidi.su/device-upgrade/project/os_install.yaml',
                       '-i', 'inventory', '-vvvv', '--tags', '9k', '--vault-id', 'vault_password'],
         input_fd=sys.stdin,
         output_fd=sys.stdout,
@@ -46,7 +46,7 @@ time.sleep(600)
 if precheck_rc == 0 and os_install_rc == 0:
     postcheck_out, postcheck_err, postcheck_rc = ansible_runner.run_command(
         executable_cmd='ansible-playbook',
-        cmdline_args=['/home/singhnavneet.su/device-upgrade/project/postcheck.yaml',
+        cmdline_args=['/home/bgopidi.su/device-upgrade/project/postcheck.yaml',
                       '-i', 'inventory', '-vvvv', '--tags', '9k', '--vault-id', 'vault_password'],
         input_fd=sys.stdin,
         output_fd=sys.stdout,
@@ -61,7 +61,7 @@ if precheck_rc == 0 and os_install_rc == 0:
 # if postcheck_err == 0:
 #     epld_install_out, epld_install_err, epld_install_rc = ansible_runner.run_command(
 #         executable_cmd='ansible-playbook',
-#         cmdline_args=['/home/singhnavneet.su/device-upgrade/project/epld_install.yaml',
+#         cmdline_args=['/home/bgopidi.su/device-upgrade/project/epld_install.yaml',
 #                       '-i', 'inventory', '-vvvv', '--tags', '7k'],
 #         input_fd=sys.stdin,
 #         output_fd=sys.stdout,

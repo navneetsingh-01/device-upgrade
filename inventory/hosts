@@ -1,7 +1,6 @@
 all:
   hosts:
-    CHI3-axs-b:
-    CHI3-axs-c:
+    tsbos4-mdf1-art-1:
   vars:
     ansible_connection: network_cli
     ansible_port: 22
